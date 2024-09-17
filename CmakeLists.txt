@@ -1,0 +1,34 @@
+cmake_minimum_required(VERSION 3.20...3.27)
+
+# initialize pico-sdk from submodule
+# note: this must happen before project()
+include(pico-sdk/pico_sdk_init.cmake)
+
+project(bearware)
+set(CMAKE_CXX_STANDARD 23)
+
+# initialize the Raspberry Pi Pico SDK
+pico_sdk_init()
+
+# gcc spits about a bunch of inactionable ABI warnings about strings. no-psabi supresses them.
+add_compile_options(-Wno-psabi)
+
+add_subdirectory(helpers)
+
+add_executable(main
+    main.cpp
+)
+
+# Add pico_stdlib library which aggregates commonly used features
+target_link_libraries(main
+    mutex
+    pico_stdlib
+)
+
+# enable usb output, enable uart output
+pico_enable_stdio_usb(main 1)
+pico_enable_stdio_uart(main 1)
+
+# create map/bin/hex/uf2 file in addition to ELF.
+pico_add_extra_outputs(main)
+

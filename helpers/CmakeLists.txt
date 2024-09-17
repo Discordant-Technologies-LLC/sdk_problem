@@ -1,0 +1,4 @@
+add_library(mutex STATIC mutex.h)
+target_link_libraries(mutex
+    pico_sync
+)
